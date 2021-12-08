@@ -1,0 +1,236 @@
+type DashboardSales {
+    lifetime_sales: String!
+    average_order: String!
+}
+
+type DashboardLastOrder {
+    customer_name: String!
+    num_items: Int!,
+    total: String!
+}
+
+type DashboardSearchTerm {
+    search_term: String!
+    results: Int!
+    uses: Int!
+}
+
+type DashboardChartPoint {
+    x: String!
+    y: Float!
+}
+
+type DashboardChart {
+    label: String!
+    points: [DashboardChartPoint!]!
+    period: String!
+}
+
+type DashboardTotals {
+    revenue: String!
+    tax: String!
+    shipping: String!
+    quantity: Int!
+}
+
+type DashboardCustomer {
+    name: String!
+    orders: Int!
+    average: String!
+    total: String!
+}
+
+type Dashboard {
+    sales: DashboardSales! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\Sales")
+    last_orders: [DashboardLastOrder!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\LastOrders")
+    last_search_terms: [DashboardSearchTerm!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\SearchTerms\\Last")
+    top_search_terms: [DashboardSearchTerm!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\SearchTerms\\Top")
+    orders_chart(period: String): DashboardChart! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\Chart\\Orders")
+    revenue_chart(period: String): DashboardChart! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\Chart\\Revenue")
+    totals(period: String): DashboardTotals! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\Totals")
+    customers_newest: [DashboardCustomer!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\CustomersNewest")
+    customers_most: [DashboardCustomer!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard\\CustomersMost")
+}
+
+type ConfigurationSection {
+    path: String!
+    label: String!
+}
+
+type ConfigurationTab {
+    label: String!
+    sections: [ConfigurationSection!]!
+}
+
+type ConfigurationOption {
+    label: String!
+    value: String
+}
+
+type ConfigurationField {
+    label: String!
+    type: String!
+    comment: String
+    options: [ConfigurationOption!]!
+    value: String
+    inherit: Boolean!
+    show_inherit: Boolean!
+    inherit_label: String!
+    path: String!
+}
+
+type ConfigurationGroup {
+    label: String!
+    fields: [ConfigurationField!]!
+}
+
+enum CacheStatus {
+    Disabled
+    Enabled
+    Invalidated
+}
+
+type CacheType {
+    id: String!
+    cache_type: String!
+    description: String!
+    tags: String!
+    status: CacheStatus!
+}
+
+enum IndexerStatus {
+    working
+    valid
+    invalid
+}
+
+type Indexer {
+    title: String!
+    description: String!
+    is_scheduled: Boolean!
+    status: IndexerStatus!
+    schedule_status: String!
+    updated: String!
+}
+
+enum ScopeType {
+    default
+    websites
+    groups
+    stores
+}
+
+type Scope {
+    name: String!
+    type: ScopeType!
+    scope_id: Int
+    disabled: Boolean!
+    children: [Scope!]!
+}
+
+type VelvetGridOrder {
+    entity_id: Int!
+    store_name: String!
+    formatted_grand_total: String!
+}
+
+type VelvetGridCustomer {
+    entity_id: Int!
+}
+
+type VelvetCmsBlock {
+    block_id: Int!
+}
+
+input VelvetCmsBlockInput {
+    block_id: Int
+}
+
+type VelvetCmsPage {
+    page_id: Int!
+}
+
+union GridItem @typeResolver(class: "Danslo\\Velvet\\Model\\Resolver\\UnionTypeResolver") =
+    VelvetCmsPage | VelvetCmsBlock | VelvetGridOrder | VelvetGridCustomer
+
+input GridInput {
+    page_size: Int
+    page_number: Int
+}
+
+type GridOutput {
+    items: [GridItem!]!
+    total_items: Int!
+    last_page_number: Int!
+}
+
+type VelvetOrderStatus {
+    customer_notified: Boolean!
+    status: String!
+    comment: String
+    created_at: String!
+}
+
+type VelvetOrder {
+    order_date: String!
+    status: String!
+    number: String!
+    items: [OrderItemInterface] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\OrderItems")
+    total: OrderTotal @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\OrderTotal")
+    invoices: [Invoice]!  @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\Invoices")
+    shipments: [OrderShipment] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\Shipments")
+    credit_memos: [CreditMemo] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\CreditMemos")
+    payment_methods: [OrderPaymentMethod]
+    shipping_address: OrderAddress
+    billing_address: OrderAddress
+    carrier: String @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\CustomerOrders\\Carrier")
+    shipping_method: String
+    comments: [SalesCommentItem]
+    customer_email: String!
+    customer_is_guest: Boolean!
+    customer_id: Int
+    customer_dob: String
+    customer_firstname: String
+    customer_lastname: String
+    customer_middlename: String
+    customer_prefix: String
+    customer_suffix: String
+    customer_gender: String
+    can_ship: Boolean!
+    can_cancel: Boolean!
+    can_invoice: Boolean!
+    can_hold: Boolean!
+    can_unhold: Boolean!
+    can_creditmemo: Boolean!
+    status_history: [VelvetOrderStatus!]!
+}
+
+type Query {
+    dashboard: Dashboard! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Dashboard")
+    configurationTabs(scope_type: ScopeType): [ConfigurationTab!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Configuration\\Tabs")
+    configurationSection(section: String!, scope_type: ScopeType, scope_id: Int): [ConfigurationGroup!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Configuration\\Section")
+    configurationScopes: [Scope!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Configuration\\Scopes")
+    cacheTypes: [CacheType!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Cache\\Types")
+    indexers: [Indexer!]! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Indexer\\Indexers")
+    orderGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Grid")
+    order(order_id: Int!): VelvetOrder! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Order")
+    cmsPageGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Cms\\Page\\Grid")
+    cmsBlockGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Cms\\Block\\Grid")
+    customerGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Customer\\Grid")
+    block(block_id: Int!): VelvetCmsBlock! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Entity\\Loader\\CmsBlock")
+}
+
+type Mutation {
+    generateAdminToken(username: String!, password: String!): String! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\GenerateAdminToken")
+    restoreConfiguration(path: String!, scope_type: ScopeType, scope_id: Int): String @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Configuration\\RestoreConfiguration")
+    saveConfiguration(path: String!, value: String!, scope_type: ScopeType, scope_id: Int): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Configuration\\SaveConfiguration")
+    shipOrder(order_id: Int!): Int! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Ship")
+    cancelOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Cancel")
+    invoiceOrder(order_id: Int!): Int! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Invoice")
+    refundOrder(order_id: Int!): Int! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Refund")
+    holdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Hold")
+    unholdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Order\\Unhold")
+    toggleCache(cache_id: String!, enable: Boolean!): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Cache\\Toggle")
+    cleanCache(cache_id: String!): Boolean! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Cache\\Clean")
+    saveBlock(input: VelvetCmsBlockInput!): VelvetCmsBlock! @resolver(class: "Danslo\\Velvet\\Model\\Resolver\\Entity\\Persister\\CmsBlock")
+}
