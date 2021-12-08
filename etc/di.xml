@@ -8,30 +8,10 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsBlock" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
-        <arguments>
-            <argument name="schemaType" xsi:type="string">VelvetCmsBlock</argument>
-            <argument name="tableName" xsi:type="string">cms_block</argument>
-            <argument name="nullableInputFields" xsi:type="array">
-                <item name="creation_time" xsi:type="string">creation_time</item>
-                <item name="update_time" xsi:type="string">update_time</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsPage" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
-        <arguments>
-            <argument name="schemaType" xsi:type="string">VelvetCmsPage</argument>
-            <argument name="tableName" xsi:type="string">cms_page</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="Magento\Framework\GraphQlSchemaStitching\Reader">
         <arguments>
             <argument name="readers" xsi:type="array">
                 <item name="customerTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\Customer</item>
-                <item name="cmsBlockTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsBlock</item>
-                <item name="cmsPageTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsPage</item>
             </argument>
         </arguments>
     </virtualType>

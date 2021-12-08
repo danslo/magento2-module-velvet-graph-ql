@@ -1,21 +1,5 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="Danslo\VelvetGraphQl\Model\Resolver\Cms\Page\Grid" type="Danslo\VelvetGraphQl\Model\Resolver\Grid">
-        <arguments>
-            <argument name="defaultOrderField" xsi:type="string">creation_time</argument>
-            <argument name="schemaType" xsi:type="string">VelvetCmsPage</argument>
-            <argument name="collectionFactoryType" xsi:type="string">Magento\Cms\Model\ResourceModel\Page\Grid\CollectionFactory</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Danslo\VelvetGraphQl\Model\Resolver\Cms\Block\Grid" type="Danslo\VelvetGraphQl\Model\Resolver\Grid">
-        <arguments>
-            <argument name="defaultOrderField" xsi:type="string">creation_time</argument>
-            <argument name="schemaType" xsi:type="string">VelvetCmsBlock</argument>
-            <argument name="collectionFactoryType" xsi:type="string">Magento\Cms\Model\ResourceModel\Block\Grid\CollectionFactory</argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="Danslo\VelvetGraphQl\Model\Resolver\Customer\Grid" type="Danslo\VelvetGraphQl\Model\Resolver\Grid">
         <arguments>
             <argument name="defaultOrderField" xsi:type="string">created_at</argument>
@@ -27,18 +11,4 @@
     <type name="Magento\Framework\GraphQl\Query\ResolverInterface">
         <plugin name="Danslo_VelvetGraphQl::admin_authorization" type="Danslo\VelvetGraphQl\Plugin\AdminAuthorizationPlugin" />
     </type>
-
-    <virtualType name="Danslo\VelvetGraphQl\Model\Resolver\Entity\Loader\CmsBlock" type="Danslo\VelvetGraphQl\Model\Resolver\Entity\Loader">
-        <arguments>
-            <argument name="entityFactory" xsi:type="string">Magento\Cms\Model\BlockFactory</argument>
-            <argument name="resourceModel" xsi:type="object">Magento\Cms\Model\ResourceModel\Block</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Danslo\VelvetGraphQl\Model\Resolver\Entity\Persister\CmsBlock" type="Danslo\VelvetGraphQl\Model\Resolver\Entity\Persister">
-        <arguments>
-            <argument name="entityFactory" xsi:type="string">Magento\Cms\Model\BlockFactory</argument>
-            <argument name="resourceModel" xsi:type="object">Magento\Cms\Model\ResourceModel\Block</argument>
-        </arguments>
-    </virtualType>
 </config>

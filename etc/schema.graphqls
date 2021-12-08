@@ -17,18 +17,6 @@ type VelvetGridCustomer {
     entity_id: Int!
 }
 
-type VelvetCmsBlock {
-    block_id: Int!
-}
-
-input VelvetCmsBlockInput {
-    block_id: Int
-}
-
-type VelvetCmsPage {
-    page_id: Int!
-}
-
 # todo: can we schema stitch this?
 union GridItem @typeResolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\UnionTypeResolver") =
     VelvetCmsPage | VelvetCmsBlock | VelvetGridOrder | VelvetGridCustomer
@@ -45,13 +33,9 @@ type GridOutput {
 }
 
 type Query {
-    cmsPageGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cms\\Page\\Grid")
-    cmsBlockGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cms\\Block\\Grid")
     customerGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Customer\\Grid")
-    block(block_id: Int!): VelvetCmsBlock! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Entity\\Loader\\CmsBlock")
 }
 
 type Mutation {
     generateAdminToken(username: String!, password: String!): String! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\GenerateAdminToken")
-    saveBlock(input: VelvetCmsBlockInput!): VelvetCmsBlock! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Entity\\Persister\\CmsBlock")
 }
