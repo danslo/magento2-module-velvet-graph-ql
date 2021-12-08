@@ -13,12 +13,6 @@ type Scope {
     children: [Scope!]!
 }
 
-type VelvetGridOrder {
-    entity_id: Int!
-    store_name: String!
-    formatted_grand_total: String!
-}
-
 type VelvetGridCustomer {
     entity_id: Int!
 }
@@ -35,6 +29,7 @@ type VelvetCmsPage {
     page_id: Int!
 }
 
+# todo: can we schema stitch this?
 union GridItem @typeResolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\UnionTypeResolver") =
     VelvetCmsPage | VelvetCmsBlock | VelvetGridOrder | VelvetGridCustomer
 
@@ -49,51 +44,7 @@ type GridOutput {
     last_page_number: Int!
 }
 
-type VelvetOrderStatus {
-    customer_notified: Boolean!
-    status: String!
-    comment: String
-    created_at: String!
-}
-
-type VelvetOrder {
-    order_date: String!
-    status: String!
-    number: String!
-    items: [OrderItemInterface] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\OrderItems")
-    total: OrderTotal @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\OrderTotal")
-    invoices: [Invoice]!  @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\Invoices")
-    shipments: [OrderShipment] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\Shipments")
-    credit_memos: [CreditMemo] @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\CreditMemos")
-    payment_methods: [OrderPaymentMethod]
-    shipping_address: OrderAddress
-    billing_address: OrderAddress
-    carrier: String @resolver(class: "Magento\\SalesGraphQl\\Model\\Resolver\\CustomerOrders\\Carrier")
-    shipping_method: String
-    comments: [SalesCommentItem]
-    customer_email: String!
-    customer_is_guest: Boolean!
-    customer_id: Int
-    customer_dob: String
-    customer_firstname: String
-    customer_lastname: String
-    customer_middlename: String
-    customer_prefix: String
-    customer_suffix: String
-    customer_gender: String
-    can_ship: Boolean!
-    can_cancel: Boolean!
-    can_invoice: Boolean!
-    can_hold: Boolean!
-    can_unhold: Boolean!
-    can_creditmemo: Boolean!
-    status_history: [VelvetOrderStatus!]!
-}
-
 type Query {
-
-    orderGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Grid")
-    order(order_id: Int!): VelvetOrder! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Order")
     cmsPageGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cms\\Page\\Grid")
     cmsBlockGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cms\\Block\\Grid")
     customerGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Customer\\Grid")
@@ -102,12 +53,5 @@ type Query {
 
 type Mutation {
     generateAdminToken(username: String!, password: String!): String! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\GenerateAdminToken")
-
-    shipOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Ship")
-    cancelOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Cancel")
-    invoiceOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Invoice")
-    refundOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Refund")
-    holdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Hold")
-    unholdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Unhold")
     saveBlock(input: VelvetCmsBlockInput!): VelvetCmsBlock! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Entity\\Persister\\CmsBlock")
 }
