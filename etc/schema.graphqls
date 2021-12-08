@@ -1,18 +1,3 @@
-enum IndexerStatus {
-    working
-    valid
-    invalid
-}
-
-type Indexer {
-    title: String!
-    description: String!
-    is_scheduled: Boolean!
-    status: IndexerStatus!
-    schedule_status: String!
-    updated: String!
-}
-
 enum ScopeType {
     default
     websites
@@ -107,7 +92,6 @@ type VelvetOrder {
 
 type Query {
 
-    indexers: [Indexer!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Indexer\\Indexers")
     orderGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Grid")
     order(order_id: Int!): VelvetOrder! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Order")
     cmsPageGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cms\\Page\\Grid")
