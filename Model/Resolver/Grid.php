@@ -18,12 +18,14 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
     private string $defaultOrderField;
     private string $schemaType;
     private ?EntityTransformerInterface $entityTransfer;
+    private string $aclResource;
 
     public function __construct(
         ObjectManagerInterface $objectManager,
         string $collectionFactoryType,
         string $defaultOrderField,
         string $schemaType,
+        string $aclResource,
         ?EntityTransformerInterface $entityTransfer = null,
         int $defaultPageSize = 20
     ) {
@@ -35,6 +37,7 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         $this->defaultOrderField = $defaultOrderField;
         $this->schemaType = $schemaType;
         $this->entityTransfer = $entityTransfer;
+        $this->aclResource = $aclResource;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
@@ -58,5 +61,10 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
             'last_page_number' => $collection->getLastPageNumber(),
             'total_items' => $collection->getTotalCount()
         ];
+    }
+
+    public function getResource(): string
+    {
+        return $this->aclResource;
     }
 }

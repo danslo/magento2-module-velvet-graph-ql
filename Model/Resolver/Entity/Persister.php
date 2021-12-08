@@ -16,16 +16,20 @@ class Persister implements ResolverInterface, AdminAuthorizationInterface
 {
     private $entityFactory;
     private AbstractDb $resourceModel;
+    private string $aclResource;
 
     public function __construct(
         ObjectManagerInterface $objectManager,
         $entityFactory,
-        AbstractDb $resourceModel
+        AbstractDb $resourceModel,
+        string $aclResource
     ) {
         // can't use generated factories with virtual types
         // see https://github.com/magento/magento2/issues/6896
         $this->entityFactory = $objectManager->create($entityFactory);
+
         $this->resourceModel = $resourceModel;
+        $this->aclResource = $aclResource;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
@@ -43,5 +47,10 @@ class Persister implements ResolverInterface, AdminAuthorizationInterface
         $entity->addData($args['input']);
         $this->resourceModel->save($entity);
         return $entity->getData();
+    }
+
+    public function getResource(): string
+    {
+        return $this->aclResource;
     }
 }

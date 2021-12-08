@@ -28,7 +28,7 @@ class AdminAuthorizationPlugin
         array $args = null
     ) {
         if ($resolver instanceof AdminAuthorizationInterface) {
-            $this->authorization->validate($context);
+            $this->authorization->check($context, $resolver->getResource());
         }
         return [$field, $context, $info, $value, $args];
     }

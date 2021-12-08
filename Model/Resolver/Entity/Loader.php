@@ -19,11 +19,13 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
     private $entityFactory;
     private AbstractDb $resourceModel;
     private ?EntityTransformerInterface $entityTransformer;
+    private string $aclResource;
 
     public function __construct(
         ObjectManagerInterface $objectManager,
         $entityFactory,
         AbstractDb $resourceModel,
+        string $aclResource,
         ?EntityTransformerInterface $entityTransformer = null
     ) {
         // can't use generated factories with virtual types
@@ -32,6 +34,7 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
 
         $this->resourceModel = $resourceModel;
         $this->entityTransformer = $entityTransformer;
+        $this->aclResource = $aclResource;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
@@ -52,5 +55,10 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
             return $this->entityTransformer->transform($data);
         }
         return $data;
+    }
+
+    public function getResource(): string
+    {
+        return $this->aclResource;
     }
 }
