@@ -13,11 +13,7 @@ type Scope {
     children: [Scope!]!
 }
 
-type VelvetGridCustomer {
-    entity_id: Int!
-}
-
-# todo: can we schema stitch this?
+# todo: reverse the dependency
 union GridItem @typeResolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\UnionTypeResolver") =
     VelvetCmsPage | VelvetCmsBlock | VelvetGridOrder | VelvetGridCustomer
 
@@ -30,10 +26,6 @@ type GridOutput {
     items: [GridItem!]!
     total_items: Int!
     last_page_number: Int!
-}
-
-type Query {
-    customerGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Customer\\Grid")
 }
 
 type Mutation {
