@@ -2,21 +2,21 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
-    <virtualType name="Danslo\VelvetGraphQl\Model\Config\TableReader\Order" type="Danslo\VelvetGraphQl\Model\Config\TableReader">
+    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\Order" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
         <arguments>
             <argument name="schemaType" xsi:type="string">VelvetGridOrder</argument>
             <argument name="tableName" xsi:type="string">sales_order_grid</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Danslo\VelvetGraphQl\Model\Config\TableReader\Customer" type="Danslo\VelvetGraphQl\Model\Config\TableReader">
+    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\Customer" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
         <arguments>
             <argument name="schemaType" xsi:type="string">VelvetGridCustomer</argument>
             <argument name="tableName" xsi:type="string">customer_grid_flat</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Danslo\VelvetGraphQl\Model\Config\TableReader\CmsBlock" type="Danslo\VelvetGraphQl\Model\Config\TableReader">
+    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsBlock" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
         <arguments>
             <argument name="schemaType" xsi:type="string">VelvetCmsBlock</argument>
             <argument name="tableName" xsi:type="string">cms_block</argument>
@@ -27,7 +27,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Danslo\VelvetGraphQl\Model\Config\TableReader\CmsPage" type="Danslo\VelvetGraphQl\Model\Config\TableReader">
+    <virtualType name="Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsPage" type="Danslo\VelvetGraphQl\Model\GraphQl\TableReader">
         <arguments>
             <argument name="schemaType" xsi:type="string">VelvetCmsPage</argument>
             <argument name="tableName" xsi:type="string">cms_page</argument>
@@ -37,10 +37,10 @@
     <virtualType name="Magento\Framework\GraphQlSchemaStitching\Reader">
         <arguments>
             <argument name="readers" xsi:type="array">
-                <item name="orderTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\Config\TableReader\Order</item>
-                <item name="customerTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\Config\TableReader\Customer</item>
-                <item name="cmsBlockTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\Config\TableReader\CmsBlock</item>
-                <item name="cmsPageTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\Config\TableReader\CmsPage</item>
+                <item name="orderTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\Order</item>
+                <item name="customerTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\Customer</item>
+                <item name="cmsBlockTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsBlock</item>
+                <item name="cmsPageTableReader" xsi:type="object">Danslo\VelvetGraphQl\Model\GraphQl\TableReader\CmsPage</item>
             </argument>
         </arguments>
     </virtualType>

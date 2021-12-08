@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Danslo\VelvetGraphQl\Model\Config;
+namespace Danslo\VelvetGraphQl\Model\GraphQl;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Config\ReaderInterface;

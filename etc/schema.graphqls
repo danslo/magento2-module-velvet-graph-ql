@@ -1,35 +1,3 @@
-type ConfigurationSection {
-    path: String!
-    label: String!
-}
-
-type ConfigurationTab {
-    label: String!
-    sections: [ConfigurationSection!]!
-}
-
-type ConfigurationOption {
-    label: String!
-    value: String
-}
-
-type ConfigurationField {
-    label: String!
-    type: String!
-    comment: String
-    options: [ConfigurationOption!]!
-    value: String
-    inherit: Boolean!
-    show_inherit: Boolean!
-    inherit_label: String!
-    path: String!
-}
-
-type ConfigurationGroup {
-    label: String!
-    fields: [ConfigurationField!]!
-}
-
 enum IndexerStatus {
     working
     valid
@@ -138,10 +106,7 @@ type VelvetOrder {
 }
 
 type Query {
-    dashboard: Dashboard! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Dashboard")
-    configurationTabs(scope_type: ScopeType): [ConfigurationTab!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Tabs")
-    configurationSection(section: String!, scope_type: ScopeType, scope_id: Int): [ConfigurationGroup!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Section")
-    configurationScopes: [Scope!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Scopes")
+
     indexers: [Indexer!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Indexer\\Indexers")
     orderGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Grid")
     order(order_id: Int!): VelvetOrder! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Order")
@@ -153,8 +118,7 @@ type Query {
 
 type Mutation {
     generateAdminToken(username: String!, password: String!): String! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\GenerateAdminToken")
-    restoreConfiguration(path: String!, scope_type: ScopeType, scope_id: Int): String @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\RestoreConfiguration")
-    saveConfiguration(path: String!, value: String!, scope_type: ScopeType, scope_id: Int): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\SaveConfiguration")
+
     shipOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Ship")
     cancelOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Cancel")
     invoiceOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Invoice")
