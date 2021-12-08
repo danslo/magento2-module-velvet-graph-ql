@@ -30,20 +30,6 @@ type ConfigurationGroup {
     fields: [ConfigurationField!]!
 }
 
-enum CacheStatus {
-    Disabled
-    Enabled
-    Invalidated
-}
-
-type CacheType {
-    id: String!
-    cache_type: String!
-    description: String!
-    tags: String!
-    status: CacheStatus!
-}
-
 enum IndexerStatus {
     working
     valid
@@ -156,7 +142,6 @@ type Query {
     configurationTabs(scope_type: ScopeType): [ConfigurationTab!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Tabs")
     configurationSection(section: String!, scope_type: ScopeType, scope_id: Int): [ConfigurationGroup!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Section")
     configurationScopes: [Scope!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Configuration\\Scopes")
-    cacheTypes: [CacheType!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cache\\Types")
     indexers: [Indexer!]! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Indexer\\Indexers")
     orderGrid(input: GridInput): GridOutput! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Grid")
     order(order_id: Int!): VelvetOrder! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Order")
@@ -176,7 +161,5 @@ type Mutation {
     refundOrder(order_id: Int!): Int! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Refund")
     holdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Hold")
     unholdOrder(order_id: Int!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Order\\Unhold")
-    toggleCache(cache_id: String!, enable: Boolean!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cache\\Toggle")
-    cleanCache(cache_id: String!): Boolean! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Cache\\Clean")
     saveBlock(input: VelvetCmsBlockInput!): VelvetCmsBlock! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\Entity\\Persister\\CmsBlock")
 }
