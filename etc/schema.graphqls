@@ -13,9 +13,7 @@ type Scope {
     children: [Scope!]!
 }
 
-# todo: reverse the dependency
-union GridItem @typeResolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\UnionTypeResolver") =
-    VelvetCmsPage | VelvetCmsBlock | VelvetGridOrder | VelvetGridCustomer
+union GridItem
 
 input GridInput {
     page_size: Int
