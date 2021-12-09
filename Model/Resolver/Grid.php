@@ -6,7 +6,7 @@ namespace Danslo\VelvetGraphQl\Model\Resolver;
 
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
 use Danslo\VelvetGraphQl\Api\CollectionProcessorInterface;
-use Danslo\VelvetGraphQl\Api\EntityTransformerInterface;
+use Danslo\VelvetGraphQl\Api\ItemTransformerInterface;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
@@ -18,8 +18,8 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
     private int $defaultPageSize;
     private string $defaultOrderField;
     private string $schemaType;
-    private ?ItemTransformerInterface $itemTransformer;
     private string $aclResource;
+    private ?ItemTransformerInterface $itemTransformer;
     private ?CollectionProcessorInterface $collectionProcessor;
 
     public function __construct(
@@ -57,11 +57,11 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
 
         $items = [];
         foreach ($collection as $item) {
-            $item = array_merge($item->getData(), ['schema_type' => $this->schemaType]);
+            $data = array_merge($item->getData(), ['schema_type' => $this->schemaType]);
             if ($this->itemTransformer !== null) {
-                $item = $this->itemTransformer->transform($item);
+                $data = $this->itemTransformer->transform($item, $data);
             }
-            $items[] = $item;
+            $items[] = $data;
         }
 
         return [

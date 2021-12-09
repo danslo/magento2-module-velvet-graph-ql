@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Danslo\VelvetGraphQl\Model\Resolver\Entity;
 
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
-use Danslo\VelvetGraphQl\Api\EntityTransformerInterface;
+use Danslo\VelvetGraphQl\Api\ItemTransformerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
@@ -52,7 +52,7 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
 
         $data = $entity->getData();
         if ($this->itemTransformer !== null) {
-            return $this->itemTransformer->transform($data);
+            return $this->itemTransformer->transform($entity, $data);
         }
         return $data;
     }
