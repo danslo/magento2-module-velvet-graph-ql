@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Danslo\VelvetGraphQl\Model\Resolver;
 
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
+use Danslo\VelvetGraphQl\Api\CollectionProcessorInterface;
 use Danslo\VelvetGraphQl\Api\EntityTransformerInterface;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -17,8 +18,9 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
     private int $defaultPageSize;
     private string $defaultOrderField;
     private string $schemaType;
-    private ?EntityTransformerInterface $entityTransfer;
+    private ?ItemTransformerInterface $itemTransformer;
     private string $aclResource;
+    private ?CollectionProcessorInterface $collectionProcessor;
 
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -26,7 +28,8 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         string $defaultOrderField,
         string $schemaType,
         string $aclResource,
-        ?EntityTransformerInterface $entityTransfer = null,
+        ?ItemTransformerInterface $itemTransformer = null,
+        ?CollectionProcessorInterface $collectionProcessor = null,
         int $defaultPageSize = 20
     ) {
         // can't use generated factories with virtual types
@@ -36,8 +39,9 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         $this->defaultPageSize = $defaultPageSize;
         $this->defaultOrderField = $defaultOrderField;
         $this->schemaType = $schemaType;
-        $this->entityTransfer = $entityTransfer;
+        $this->itemTransformer = $itemTransformer;
         $this->aclResource = $aclResource;
+        $this->collectionProcessor = $collectionProcessor;
     }
 
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
@@ -47,11 +51,15 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
             ->setPageSize($args['input']['page_size'] ?? $this->defaultPageSize)
             ->addOrder($this->defaultOrderField);
 
+        if ($this->collectionProcessor !== null) {
+            $this->collectionProcessor->process($field, $collection);
+        }
+
         $items = [];
         foreach ($collection as $item) {
             $item = array_merge($item->getData(), ['schema_type' => $this->schemaType]);
-            if ($this->entityTransfer !== null) {
-                $item = $this->entityTransfer->transform($item);
+            if ($this->itemTransformer !== null) {
+                $item = $this->itemTransformer->transform($item);
             }
             $items[] = $item;
         }
@@ -59,7 +67,7 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         return [
             'items' => $items,
             'last_page_number' => $collection->getLastPageNumber(),
-            'total_items' => $collection->getTotalCount()
+            'total_items' => $collection->getSize()
         ];
     }
 

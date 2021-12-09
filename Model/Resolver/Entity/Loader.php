@@ -18,7 +18,7 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
 {
     private $entityFactory;
     private AbstractDb $resourceModel;
-    private ?EntityTransformerInterface $entityTransformer;
+    private ?ItemTransformerInterface $itemTransformer;
     private string $aclResource;
 
     public function __construct(
@@ -26,14 +26,14 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
         $entityFactory,
         AbstractDb $resourceModel,
         string $aclResource,
-        ?EntityTransformerInterface $entityTransformer = null
+        ?ItemTransformerInterface $itemTransformer = null
     ) {
         // can't use generated factories with virtual types
         // see https://github.com/magento/magento2/issues/6896
         $this->entityFactory = $objectManager->create($entityFactory);
 
         $this->resourceModel = $resourceModel;
-        $this->entityTransformer = $entityTransformer;
+        $this->itemTransformer = $itemTransformer;
         $this->aclResource = $aclResource;
     }
 
@@ -51,8 +51,8 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
         }
 
         $data = $entity->getData();
-        if ($this->entityTransformer !== null) {
-            return $this->entityTransformer->transform($data);
+        if ($this->itemTransformer !== null) {
+            return $this->itemTransformer->transform($data);
         }
         return $data;
     }
