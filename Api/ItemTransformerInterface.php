@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Danslo\VelvetGraphQl\Api;
 
-use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\DataObject;
 
 interface ItemTransformerInterface
 {
-    public function transform(AbstractModel $model, array $data): array;
+    public function transform(DataObject $model, array $data): array;
 }
