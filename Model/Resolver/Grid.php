@@ -7,6 +7,7 @@ namespace Danslo\VelvetGraphQl\Model\Resolver;
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
 use Danslo\VelvetGraphQl\Api\CollectionProcessorInterface;
 use Danslo\VelvetGraphQl\Api\ItemTransformerInterface;
+use GraphQL\Language\AST\FieldNode;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
@@ -44,6 +45,16 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         $this->collectionProcessor = $collectionProcessor;
     }
 
+    private function getItemsFieldNode(ResolveInfo $info): ?FieldNode
+    {
+        foreach ($info->fieldNodes[0]->selectionSet->selections as $selection) {
+            if ($selection instanceof FieldNode && $selection->name->value === 'items') {
+                return $selection;
+            }
+        }
+        return null;
+    }
+
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
     {
         $collection = $this->collectionFactory->create()
@@ -52,7 +63,10 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
             ->addOrder($this->defaultOrderField);
 
         if ($this->collectionProcessor !== null) {
-            $this->collectionProcessor->process($field, $collection);
+            $fieldNode = $this->getItemsFieldNode($info);
+            if ($fieldNode !== null) {
+                $this->collectionProcessor->process($fieldNode, $info, $collection);
+            }
         }
 
         $items = [];
