@@ -6,13 +6,13 @@ namespace Danslo\VelvetGraphQl\Model\Resolver\Entity;
 
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
 use Danslo\VelvetGraphQl\Api\ItemTransformerInterface;
+use Danslo\VelvetGraphQl\Model\FactoryWrapper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\ObjectManagerInterface;
 
 class Loader implements ResolverInterface, AdminAuthorizationInterface
 {
@@ -22,16 +22,12 @@ class Loader implements ResolverInterface, AdminAuthorizationInterface
     private string $aclResource;
 
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        $entityFactory,
+        FactoryWrapper $factoryWrapper,
         AbstractDb $resourceModel,
         string $aclResource,
         ?ItemTransformerInterface $itemTransformer = null
     ) {
-        // can't use generated factories with virtual types
-        // see https://github.com/magento/magento2/issues/6896
-        $this->entityFactory = $objectManager->create($entityFactory);
-
+        $this->entityFactory = $factoryWrapper->getFactory();
         $this->resourceModel = $resourceModel;
         $this->itemTransformer = $itemTransformer;
         $this->aclResource = $aclResource;

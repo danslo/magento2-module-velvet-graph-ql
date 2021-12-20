@@ -7,11 +7,11 @@ namespace Danslo\VelvetGraphQl\Model\Resolver;
 use Danslo\VelvetGraphQl\Api\AdminAuthorizationInterface;
 use Danslo\VelvetGraphQl\Api\CollectionProcessorInterface;
 use Danslo\VelvetGraphQl\Api\ItemTransformerInterface;
+use Danslo\VelvetGraphQl\Model\FactoryWrapper;
 use GraphQL\Language\AST\FieldNode;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magento\Framework\ObjectManagerInterface;
 
 class Grid implements ResolverInterface, AdminAuthorizationInterface
 {
@@ -24,8 +24,7 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
     private ?CollectionProcessorInterface $collectionProcessor;
 
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        string $collectionFactoryType,
+        FactoryWrapper $factoryWrapper,
         string $defaultOrderField,
         string $schemaType,
         string $aclResource,
@@ -33,10 +32,7 @@ class Grid implements ResolverInterface, AdminAuthorizationInterface
         ?CollectionProcessorInterface $collectionProcessor = null,
         int $defaultPageSize = 20
     ) {
-        // can't use generated factories with virtual types
-        // see https://github.com/magento/magento2/issues/6896
-        $this->collectionFactory = $objectManager->create($collectionFactoryType);
-
+        $this->collectionFactory = $factoryWrapper->getFactory();
         $this->defaultPageSize = $defaultPageSize;
         $this->defaultOrderField = $defaultOrderField;
         $this->schemaType = $schemaType;
