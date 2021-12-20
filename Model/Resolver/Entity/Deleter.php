@@ -34,11 +34,11 @@ class Deleter implements ResolverInterface, AdminAuthorizationInterface
         $idFieldName = $this->resourceModel->getIdFieldName();
         $entity = $this->entityFactory->create();
 
-        if (!isset($args['input'][$idFieldName])) {
+        if (!isset($args[$idFieldName])) {
             throw new GraphQlInputException(__(sprintf('%s must be specified.', $idFieldName)));
         }
 
-        $this->resourceModel->load($entity, $args['input'][$idFieldName]);
+        $this->resourceModel->load($entity, $args[$idFieldName]);
         if ($entity->getId() === null) {
             throw new NoSuchEntityException();
         }
