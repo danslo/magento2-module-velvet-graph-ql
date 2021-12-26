@@ -26,6 +26,11 @@ type GridOutput {
     last_page_number: Int!
 }
 
+type Option {
+    label: String!
+    value: String
+}
+
 type Mutation {
     generateAdminToken(username: String!, password: String!): String! @resolver(class: "Danslo\\VelvetGraphQl\\Model\\Resolver\\GenerateAdminToken")
 }
