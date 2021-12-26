@@ -1,0 +1,19 @@
+{
+    "name": "danslo/m2-module-velvet-graph-ql",
+    "type": "magento2-module",
+    "authors": [
+        {
+            "name": "Daniel Sloof",
+            "email": "daniel@rubic.nl"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Danslo\\VelvetGraphQl\\": ""
+        }
+    },
+    "require": {}
+}
