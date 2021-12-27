@@ -11,17 +11,17 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
 
 class Deleter implements ResolverInterface, AdminAuthorizationInterface
 {
     private $entityFactory;
-    private AbstractDb $resourceModel;
+    private AbstractResource $resourceModel;
     private string $aclResource;
 
     public function __construct(
         FactoryWrapper $factoryWrapper,
-        AbstractDb $resourceModel,
+        AbstractResource $resourceModel,
         string $aclResource
     ) {
         $this->entityFactory = $factoryWrapper->getFactory();
