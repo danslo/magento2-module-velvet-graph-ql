@@ -12,20 +12,20 @@ use Magento\Framework\GraphQlSchemaStitching\GraphQlReader\Reader\ObjectType;
 class TableReader implements ReaderInterface
 {
     private ResourceConnection $resourceConnection;
-    private string $tableName;
+    private array $tableNames;
     private string $schemaType;
     private bool $generateInputType;
     private array $nullableInputFields;
 
     public function __construct(
         ResourceConnection $resourceConnection,
-        string $tableName,
+        array $tableNames,
         string $schemaType,
         bool $generateInputType = true,
         array $nullableInputFields = []
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->tableName = $tableName;
+        $this->tableNames = $tableNames;
         $this->schemaType = $schemaType;
         $this->generateInputType = $generateInputType;
         $this->nullableInputFields = $nullableInputFields;
@@ -59,22 +59,24 @@ class TableReader implements ReaderInterface
             'fields' => []
         ];
 
-        $tableDescription = $this->resourceConnection->getConnection()->describeTable($this->tableName);
-        foreach ($tableDescription as $column => $description) {
-            $columnIsRequired = $description['NULLABLE'] === false;
+        foreach ($this->tableNames as $tableName) {
+            $tableDescription = $this->resourceConnection->getConnection()->describeTable($tableName);
+            foreach ($tableDescription as $column => $description) {
+                $columnIsRequired = $description['NULLABLE'] === false;
 
-            if ($isInputType) {
-                if (in_array($column, $this->nullableInputFields) || $description['PRIMARY'] === true) {
-                    $columnIsRequired = false;
+                if ($isInputType) {
+                    if (in_array($column, $this->nullableInputFields) || $description['PRIMARY'] === true) {
+                        $columnIsRequired = false;
+                    }
                 }
-            }
 
-            $config['fields'][$column] = [
-                'name' => $column,
-                'type' => $this->getTypeFromColumnDescription($description),
-                'required' => $columnIsRequired,
-                'arguments' => []
-            ];
+                $config['fields'][$column] = [
+                    'name' => $column,
+                    'type' => $this->getTypeFromColumnDescription($description),
+                    'required' => $columnIsRequired,
+                    'arguments' => []
+                ];
+            }
         }
 
         return $config;
@@ -82,11 +84,6 @@ class TableReader implements ReaderInterface
 
     public function read($scope = null)
     {
-        $connection = $this->resourceConnection->getConnection();
-        if (!$connection->isTableExists($this->tableName)) {
-            return [];
-        }
-
         $types = [$this->schemaType => $this->getSchemaConfig($this->schemaType)];
 
         if ($this->generateInputType) {
